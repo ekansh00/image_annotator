@@ -1,25 +1,47 @@
-import logo from './logo.svg';
+import React from "react";
+import plan from "./plan-1.jpg";
+
+import Annotation from 'react-image-annotation'
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+export default class App extends React.Component {
+  state = {
+    annotations: [],
+    annotation: {}
+  }
 
-export default App;
+  onChange = (annotation) => {
+    this.setState({ annotation })
+  }
+
+  onSubmit = (annotation) => {
+    const { geometry, data } = annotation
+
+    this.setState({
+      annotation: {},
+      annotations: this.state.annotations.concat({
+        geometry,
+        data: {
+          ...data,
+          id: Math.random()
+        }
+      })
+    })
+  }
+
+  render() {
+    return (
+      <Annotation
+        src={plan}
+        alt='Two pebbles anthropomorphized holding hands'
+
+        annotations={this.state.annotations}
+
+        type={this.state.type}
+        value={this.state.annotation}
+        onChange={this.onChange}
+        onSubmit={this.onSubmit}
+      />
+    )
+  }
+}
